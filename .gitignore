@@ -1,5 +1,6 @@
 emb/*
 exp/*
+dataset/rawaig
 .vscode
 
 *__pycache__

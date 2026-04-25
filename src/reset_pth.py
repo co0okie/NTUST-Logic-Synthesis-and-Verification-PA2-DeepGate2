@@ -15,10 +15,10 @@ from trains.train_factory import train_factory
 
 os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
 
-src_pth_filepath = 'exp/prob/aggr_exp_deepset/model_stage1.pth'
-dst_pth_filepath = 'exp/prob/aggr_exp_deepset/model_last.pth'
-
 def main(args):
+    src_pth_filepath = os.path.join(args.save_dir, 'model_last.pth')
+    dst_pth_filepath = os.path.join(args.save_dir, 'model_last.pth')
+
     #################
     # Device 
     #################
