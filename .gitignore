@@ -1,6 +1,6 @@
 emb/*
-exp/*
 dataset/rawaig
+data/train/tmp*.npz
 .vscode
 
 *__pycache__

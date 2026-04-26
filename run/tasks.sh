@@ -15,11 +15,11 @@ export CUDA_VISIBLE_DEVICES=$GPU_ID
 # 既然環境已經被隔離，傳給 Python 的 GPU 編號固定為 0
 GPUS_ARG=0
 NUM_PROC=1
+EXP_ID="$EXPERIMENT"
 
 # 根據 $1 設定對應的參數
 case $EXPERIMENT in
     dim32)
-        EXP_ID="train_dim32"
         MASTER_PORT=29500
         DIM_HIDDEN=32
         DISABLE_ENCODE=""
@@ -27,7 +27,6 @@ case $EXPERIMENT in
         S2_PROB=3; S2_RC=1; S2_FUNC=2
         ;;
     dim64)
-        EXP_ID="train_dim64"
         MASTER_PORT=29501
         DIM_HIDDEN=64
         DISABLE_ENCODE=""
@@ -35,7 +34,6 @@ case $EXPERIMENT in
         S2_PROB=3; S2_RC=1; S2_FUNC=2
         ;;
     dim128)
-        EXP_ID="train_dim128"
         MASTER_PORT=29502
         DIM_HIDDEN=128
         DISABLE_ENCODE=""
@@ -43,7 +41,6 @@ case $EXPERIMENT in
         S2_PROB=3; S2_RC=1; S2_FUNC=2
         ;;
     dim64_no_tt)
-        EXP_ID="train_no_tt"
         MASTER_PORT=29503
         DIM_HIDDEN=64
         DISABLE_ENCODE=""
@@ -51,7 +48,6 @@ case $EXPERIMENT in
         S2_PROB=3; S2_RC=1; S2_FUNC=0
         ;;
     dim64_no_orthogonal_pi)
-        EXP_ID="train_no_ortho"
         MASTER_PORT=29504
         DIM_HIDDEN=64
         # Ablation: 拔除正交編碼
@@ -80,7 +76,10 @@ python3 -m torch.distributed.run --nproc_per_node=$NUM_PROC --master_port=$MASTE
  --arch mlpgnn \
  --Prob_weight 1 --RC_weight 0 --Func_weight 0 \
  --num_rounds 1 \
- --gpus $GPUS_ARG --batch_size 16 \
+ --gpus $GPUS_ARG \
+ --batch_size 64 \
+ --num_epochs 20 \
+ --lr_step 15 \
  --no_rc \
  --dim_hidden $DIM_HIDDEN \
  $DISABLE_ENCODE
@@ -99,7 +98,10 @@ python3 -m torch.distributed.run --nproc_per_node=$NUM_PROC --master_port=$MASTE
  --arch mlpgnn \
  --Prob_weight $S2_PROB --RC_weight $S2_RC --Func_weight $S2_FUNC \
  --num_rounds 1 \
- --gpus $GPUS_ARG --batch_size 16 \
+ --gpus $GPUS_ARG \
+ --batch_size 64 \
+ --num_epochs 20 \
+ --lr_step 15 \
  --resume \
  --no_rc \
  --dim_hidden $DIM_HIDDEN \
